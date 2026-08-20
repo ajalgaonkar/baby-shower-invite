@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baby Shower Celebration!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Quicksand:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+
+  <!-- Gold speckles overlay -->
+  <div class="gold-speckles"></div>
+
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <p class="hero-pretext">Please Join Us For A</p>
+      <h1 class="hero-title">Baby Shower</h1>
+      <div class="hero-illustration">
+        <img src="cradle.png" alt="Baby in a moon cradle" class="cradle-img">
+      </div>
+      <p class="hero-subtitle">Join us as we celebrate the upcoming arrival of our little one!</p>
+      <div class="bounce-arrow" onclick="document.getElementById('details').scrollIntoView({behavior: 'smooth'})">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C4956A" stroke-width="2">
+          <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Event Details -->
+    <section id="details" class="details">
+      <h2 class="section-title">Event Details</h2>
+      <div class="details-grid">
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <rect x="5" y="8" width="30" height="27" rx="4" stroke="#C4956A" stroke-width="2"/>
+              <path d="M5 16h30" stroke="#C4956A" stroke-width="2"/>
+              <path d="M12 5v6M28 5v6" stroke="#C4956A" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="20" cy="26" r="3" fill="#E8A0A0"/>
+            </svg>
+          </div>
+          <h3>When</h3>
+          <p class="detail-primary">August 30, 2026</p>
+          <p class="detail-secondary">Saturday, 2:00 PM - 5:00 PM</p>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <path d="M20 4C13 4 8 10 8 16c0 10 12 20 12 20s12-10 12-20c0-6-5-12-12-12z" stroke="#C4956A" stroke-width="2"/>
+              <circle cx="20" cy="16" r="4" fill="#E8A0A0"/>
+            </svg>
+          </div>
+          <h3>Where</h3>
+          <p class="detail-primary">The Garden Pavilion</p>
+          <p class="detail-secondary">123 Celebration Lane<br>Springfield, ST 12345</p>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <rect x="8" y="12" width="24" height="20" rx="3" stroke="#C4956A" stroke-width="2"/>
+              <path d="M8 18h24" stroke="#C4956A" stroke-width="2"/>
+              <path d="M16 8l4 4 4-4" stroke="#E8A0A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="20" cy="24" r="2" fill="#C4956A"/>
+            </svg>
+          </div>
+          <h3>Registry</h3>
+          <p class="detail-primary">Baby Registry</p>
+          <a href="https://www.example.com/registry" target="_blank" class="registry-link">View Our Registry &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Countdown Timer -->
+    <section class="countdown-section">
+      <h2 class="section-title">Counting Down!</h2>
+      <div class="countdown" id="countdown">
+        <div class="countdown-item">
+          <span class="countdown-number" id="days">--</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="hours">--</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="minutes">--</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="seconds">--</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="rsvp-section">
+      <h2 class="section-title">RSVP</h2>
+      <p class="rsvp-subtitle">Let us know you're coming! Please RSVP by August 23, 2026.</p>
+
+      <form id="rsvp-form" class="rsvp-form">
+        <div class="form-group">
+          <label for="familyName">Family Name</label>
+          <input type="text" id="familyName" name="familyName" placeholder="e.g. The Johnsons" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="adults">Number of Adults</label>
+            <div class="number-input">
+              <button type="button" class="num-btn minus" data-target="adults">&minus;</button>
+              <input type="number" id="adults" name="adults" value="1" min="1" max="10" required>
+              <button type="button" class="num-btn plus" data-target="adults">+</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="children">Number of Children</label>
+            <div class="number-input">
+              <button type="button" class="num-btn minus" data-target="children">&minus;</button>
+              <input type="number" id="children" name="children" value="0" min="0" max="10">
+              <button type="button" class="num-btn plus" data-target="children">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Leave a Message (optional)</label>
+          <textarea id="message" name="message" placeholder="Any dietary restrictions, well wishes, or notes..." rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span class="btn-text">Send RSVP</span>
+          <span class="btn-loading" style="display:none;">Sending...</span>
+        </button>
+      </form>
+
+      <div id="rsvp-success" class="rsvp-success" style="display:none;">
+        <div class="success-icon">&#127882;</div>
+        <h3>Hooray! We got your RSVP!</h3>
+        <p>We can't wait to celebrate with you!</p>
+      </div>
+    </section>
+
+    <!-- Guest Counter -->
+    <section class="guest-counter">
+      <div class="counter-content">
+        <span class="counter-emoji">&#128118;</span>
+        <p><span id="family-count">0</span> families have RSVP'd so far!</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Made with love for our little one on the way</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
