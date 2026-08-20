@@ -240,7 +240,7 @@ body::before {
   line-height: 1.5;
 }
 
-.registry-link {
+.registry-link, .location-link {
   display: inline-block;
   margin-top: 8px;
   color: var(--green);
@@ -249,7 +249,7 @@ body::before {
   transition: color 0.3s;
 }
 
-.registry-link:hover {
+.registry-link:hover, .location-link:hover {
   color: var(--coral);
 }
 
