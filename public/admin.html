@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSVP Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #C4956A;
+      --primary-light: #D4A574;
+      --rose: #E8A0A0;
+      --rose-light: #F5D5D0;
+      --green: #7A9E7E;
+      --coral: #D4756A;
+      --cream: #FDF8F4;
+      --text: #4A3728;
+      --text-light: #7A6455;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --shadow: 0 8px 32px rgba(196, 149, 106, 0.12);
+      --radius: 16px;
+    }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at top left, rgba(240, 184, 184, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(212, 117, 106, 0.1) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3rem;
+      color: var(--primary);
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .header p {
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+    .stats {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 16px 28px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(196, 149, 106, 0.12);
+    }
+    .stat-card .number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+    .table-wrapper {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(196, 149, 106, 0.12);
+      overflow: hidden;
+    }
+    .table-actions {
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(196, 149, 106, 0.1);
+    }
+    .table-actions .refresh-btn {
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--primary), var(--coral));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .table-actions .refresh-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(196, 149, 106, 0.3);
+    }
+    .table-actions .back-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .table-actions .back-link:hover {
+      color: var(--coral);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead th {
+      background: rgba(196, 149, 106, 0.08);
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+      border-bottom: 1px solid rgba(196, 149, 106, 0.15);
+    }
+    tbody tr {
+      border-bottom: 1px solid rgba(196, 149, 106, 0.08);
+      transition: background 0.2s;
+    }
+    tbody tr:hover {
+      background: rgba(196, 149, 106, 0.04);
+    }
+    tbody td {
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+    .msg-cell {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-light);
+      font-style: italic;
+    }
+    .date-cell {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+    .action-btns {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-edit, .btn-delete, .btn-save, .btn-cancel {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .btn-edit {
+      background: rgba(122, 158, 126, 0.15);
+      color: var(--green);
+    }
+    .btn-edit:hover { background: rgba(122, 158, 126, 0.25); }
+    .btn-delete {
+      background: rgba(212, 117, 106, 0.12);
+      color: var(--coral);
+    }
+    .btn-delete:hover { background: rgba(212, 117, 106, 0.22); }
+    .btn-save {
+      background: rgba(122, 158, 126, 0.2);
+      color: var(--green);
+    }
+    .btn-save:hover { background: rgba(122, 158, 126, 0.3); }
+    .btn-cancel {
+      background: rgba(196, 149, 106, 0.12);
+      color: var(--text-light);
+    }
+    .btn-cancel:hover { background: rgba(196, 149, 106, 0.2); }
+    .edit-input {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1.5px solid rgba(196, 149, 106, 0.3);
+      border-radius: 6px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .edit-input:focus {
+      border-color: var(--primary);
+    }
+    .edit-input-sm {
+      width: 60px;
+      text-align: center;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-light);
+    }
+    .empty-state p {
+      font-size: 1.1rem;
+      margin-top: 12px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      z-index: 1000;
+      animation: slideUp 0.3s ease;
+      transition: opacity 0.3s;
+    }
+    .toast-success {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    .toast-error {
+      background: #fbe9e7;
+      color: #c62828;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .confirm-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      animation: fadeIn 0.2s ease;
+    }
+    .confirm-dialog {
+      background: white;
+      border-radius: var(--radius);
+      padding: 32px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    .confirm-dialog h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--coral);
+      margin-bottom: 12px;
+    }
+    .confirm-dialog p {
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+    .confirm-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .confirm-btns button {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .confirm-yes {
+      background: var(--coral);
+      color: white;
+    }
+    .confirm-no {
+      background: rgba(196, 149, 106, 0.12);
+      color: var(--text);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @media (max-width: 768px) {
+      .table-wrapper { overflow-x: auto; }
+      table { min-width: 600px; }
+      .stats { gap: 10px; }
+      .stat-card { padding: 12px 20px; }
+      .stat-card .number { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>RSVP Manager</h1>
+      <p>View and manage baby shower RSVPs</p>
+    </div>
+
+    <div class="stats" id="stats">
+      <div class="stat-card">
+        <div class="number" id="stat-families">-</div>
+        <div class="label">Families</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-adults">-</div>
+        <div class="label">Adults</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-children">-</div>
+        <div class="label">Children</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-total">-</div>
+        <div class="label">Total Guests</div>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <div class="table-actions">
+        <a href="/" class="back-link">&larr; Back to invitation</a>
+        <button class="refresh-btn" onclick="loadRsvps()">Refresh</button>
+      </div>
+      <div id="table-container"></div>
+    </div>
+  </div>
+
+  <script>
+    let rsvps = [];
+
+    async function loadRsvps() {
+      try {
+        const res = await fetch('/api/rsvps');
+        rsvps = await res.json();
+        renderStats();
+        renderTable();
+      } catch (err) {
+        showToast('Failed to load RSVPs', 'error');
+      }
+    }
+
+    function renderStats() {
+      const families = rsvps.length;
+      const adults = rsvps.reduce((s, r) => s + r.adults, 0);
+      const children = rsvps.reduce((s, r) => s + r.children, 0);
+      document.getElementById('stat-families').textContent = families;
+      document.getElementById('stat-adults').textContent = adults;
+      document.getElementById('stat-children').textContent = children;
+      document.getElementById('stat-total').textContent = adults + children;
+    }
+
+    function renderTable() {
+      const container = document.getElementById('table-container');
+
+      if (rsvps.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No RSVPs yet</p></div>';
+        return;
+      }
+
+      let html = `<table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Family Name</th>
+            <th>Adults</th>
+            <th>Children</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+      rsvps.forEach((r, i) => {
+        const date = new Date(r.submittedAt).toLocaleDateString('en-US', {
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+        html += `<tr id="row-${i}">
+          <td>${i + 1}</td>
+          <td>${escapeHtml(r.familyName)}</td>
+          <td>${r.adults}</td>
+          <td>${r.children}</td>
+          <td class="msg-cell" title="${escapeHtml(r.message || '')}">${escapeHtml(r.message || '-')}</td>
+          <td class="date-cell">${date}</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-edit" onclick="startEdit(${i})">Edit</button>
+              <button class="btn-delete" onclick="confirmDelete(${i})">Delete</button>
+            </div>
+          </td>
+        </tr>`;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function startEdit(index) {
+      const r = rsvps[index];
+      const row = document.getElementById(`row-${index}`);
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td><input class="edit-input" id="edit-name-${index}" value="${escapeHtml(r.familyName)}"></td>
+        <td><input class="edit-input edit-input-sm" type="number" min="1" id="edit-adults-${index}" value="${r.adults}"></td>
+        <td><input class="edit-input edit-input-sm" type="number" min="0" id="edit-children-${index}" value="${r.children}"></td>
+        <td><input class="edit-input" id="edit-msg-${index}" value="${escapeHtml(r.message || '')}"></td>
+        <td class="date-cell">${new Date(r.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-save" onclick="saveEdit(${index})">Save</button>
+            <button class="btn-cancel" onclick="renderTable()">Cancel</button>
+          </div>
+        </td>`;
+    }
+
+    async function saveEdit(index) {
+      const r = rsvps[index];
+      const familyName = document.getElementById(`edit-name-${index}`).value;
+      const adults = document.getElementById(`edit-adults-${index}`).value;
+      const children = document.getElementById(`edit-children-${index}`).value;
+      const message = document.getElementById(`edit-msg-${index}`).value;
+
+      try {
+        const res = await fetch('/api/rsvp-edit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            originalFamilyName: r.familyName,
+            familyName,
+            adults: parseInt(adults),
+            children: parseInt(children),
+            message
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('RSVP updated');
+          loadRsvps();
+        } else {
+          showToast(data.error || 'Update failed', 'error');
+        }
+      } catch (err) {
+        showToast('Update failed', 'error');
+      }
+    }
+
+    function confirmDelete(index) {
+      const r = rsvps[index];
+      const overlay = document.createElement('div');
+      overlay.className = 'confirm-overlay';
+      overlay.innerHTML = `
+        <div class="confirm-dialog">
+          <h3>Delete RSVP?</h3>
+          <p>Remove "${escapeHtml(r.familyName)}" from the guest list?</p>
+          <div class="confirm-btns">
+            <button class="confirm-yes" id="confirm-yes">Delete</button>
+            <button class="confirm-no" id="confirm-no">Cancel</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+
+      document.getElementById('confirm-yes').onclick = () => {
+        document.body.removeChild(overlay);
+        doDelete(index);
+      };
+      document.getElementById('confirm-no').onclick = () => {
+        document.body.removeChild(overlay);
+      };
+      overlay.onclick = (e) => {
+        if (e.target === overlay) document.body.removeChild(overlay);
+      };
+    }
+
+    async function doDelete(index) {
+      const r = rsvps[index];
+      try {
+        const res = await fetch('/api/rsvp-delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ familyName: r.familyName })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('RSVP deleted');
+          loadRsvps();
+        } else {
+          showToast(data.error || 'Delete failed', 'error');
+        }
+      } catch (err) {
+        showToast('Delete failed', 'error');
+      }
+    }
+
+    function showToast(msg, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => document.body.removeChild(toast), 300);
+      }, 2500);
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    loadRsvps();
+  </script>
+</body>
+</html>
