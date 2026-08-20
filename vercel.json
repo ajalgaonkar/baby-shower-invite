@@ -6,11 +6,5 @@
     { "source": "/api/rsvp", "destination": "/api/rsvp" },
     { "source": "/api/rsvps/count", "destination": "/api/rsvps-count" }
   ],
-  "outputDirectory": "public",
-  "functions": {
-    "api/*.js": {
-      "runtime": "@vercel/node@3",
-      "excludeFiles": "server.js"
-    }
-  }
+  "outputDirectory": "public"
 }
