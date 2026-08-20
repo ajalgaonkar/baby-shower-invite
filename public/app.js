@@ -1,6 +1,6 @@
 // Countdown Timer
 function updateCountdown() {
-  const eventDate = new Date('2026-08-30T14:00:00');
+  const eventDate = new Date('2026-08-30T17:30:00');
   const now = new Date();
   const diff = eventDate - now;
 
