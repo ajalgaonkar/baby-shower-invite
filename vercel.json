@@ -9,8 +9,8 @@
   "outputDirectory": "public",
   "functions": {
     "api/*.js": {
-      "runtime": "@vercel/node@3"
+      "runtime": "@vercel/node@3",
+      "excludeFiles": "server.js"
     }
-  },
-  "excludeFiles": "server.js"
+  }
 }
