@@ -96,7 +96,7 @@ module.exports = async function handler(req, res) {
 
   await redis.set(RSVP_KEY, rsvps);
 
-  sendNotificationEmail(entry, isUpdate);
+  await sendNotificationEmail(entry, isUpdate);
 
   res.json({ success: true, message: "RSVP received! We can't wait to see you!" });
 };
